@@ -94,7 +94,9 @@ export default class NewsPage extends Component {
 
     onItemClick(index, link) {
         // alert("点击了:" + link);
-        this.props.nana
+        this.props.navigation.navigate('Details', {
+            link : link
+        })
     }
     // onPress = { () =>{this.onItemClick(index,item.link)}}
 }

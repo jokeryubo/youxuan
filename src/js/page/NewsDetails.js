@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text ,WebView } from 'react-native';
 
 export default class NewsDetails extends Component {
+  static navigationOptions ={
+    header:null
+  }
   constructor(props) {
     super(props);
     this.state = {
@@ -10,9 +13,7 @@ export default class NewsDetails extends Component {
 
   render() {
     return (
-      <View>
-        <Text> textInComponent </Text>
-      </View>
+      <WebView source = {{uri : this.props.navigation.getParam('link','')}}/>
     );
   }
 }

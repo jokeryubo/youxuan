@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import { createAppContainer, createBottomTabNavigator, createStackNavigator } from 'react-navigation'
+import { createAppContainer, createBottomTabNavigator, createStackNavigator ,createMaterialTopTabNavigator} from 'react-navigation'
 import MoviesPage from './src/js/page/MoviesPage'
 import NewsPage from './src/js/page/NewsPage'
 import RecommendPage from './src/js/page/RecommendPage'
 import MyPage from './src/js/page/MyPage'
 import { scaleSizeH, setSpText } from './src/util/ScreenUtils';
 import NewsDetails from './src/js/page/NewsDetails';
+import HotShowing from './src/js/page/HotShowing';
+import Incoming from './src/js/page/Incoming';
+import Top250 from './src/js/page/Top250';
 
 const TabNavigator = createBottomTabNavigator({
-  news: NewsPage,
+  
   movies: MoviesPage,
+  news: NewsPage,
   recommend: RecommendPage,
   my: MyPage
 },
@@ -59,6 +63,7 @@ const TabNavigator = createBottomTabNavigator({
       // //tab 页指示符的样式 (tab页下面的一条线).
       // indicatorStyle: {height: 2},
   },
+  
   // //tab bar的位置, 可选值： 'top' or 'bottom'
   // tabBarPosition: 'bottom',
   // //是否允许滑动切换tab页
@@ -71,12 +76,24 @@ const TabNavigator = createBottomTabNavigator({
   // backBehavior: 'none',
   }
 )
+TabNavigator.navigationOptions = {
+  // Hide the header from AppNavigator stack
+  header: null,
+};
+
 const RootStack = createStackNavigator(
   {
+    TabNavigator:TabNavigator,
     Details: NewsDetails,
   },
   {
   }
 );
 
-export default createAppContainer(TabNavigator,RootStack);
+const TopNavigator = createMaterialTopTabNavigator({
+  hot : HotShowing,
+  coming: Incoming,
+  top:Top250,
+});
+
+export default createAppContainer(RootStack);
