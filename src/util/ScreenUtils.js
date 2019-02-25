@@ -19,7 +19,6 @@ const designHeight = 1920.0;
 // 根据dp获取屏幕的px
 let screenPxW = ReactNative.PixelRatio.getPixelSizeForLayoutSize(screenW);
 let screenPxH = ReactNative.PixelRatio.getPixelSizeForLayoutSize(screenH);
-
 /**
  * 设置text
  * @param size  px
