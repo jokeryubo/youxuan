@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
-import { Text, View, Image, StyleSheet, ScrollView, Button } from 'react-native'
+import { Text, View, Image, StyleSheet, ScrollView, Button ,
+  TouchableWithoutFeedback,
+} from 'react-native'
 import { scaleSizeW, scaleSizeH } from '../../util/ScreenUtils';
-import HotShowing from './HotShowing';
-import Incoming from './Incoming';
-import Top250 from './Top250';
 import { createAppContainer, createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 import { FlatList } from 'react-native-gesture-handler';
 
 const HOT_URL = "https://api.douban.com/v2/movie/in_theaters?city=北京&start=0&count=5";
 
-
+const INCOMING_SOON_URL = "https://api.douban.com/v2/movie/coming_soon?start=0&count=5";
+const TOP250_URL = "http://api.douban.com/v2/movie/top250?start=0&count=5";
 export default class MoviesPage extends Component {
   static navigationOptions = {
     tabBarLabel: '电影',
+    header: null,
     tabBarIcon: ({ focused, tintColor }) => {
       if (focused) {
         return (
@@ -27,16 +28,24 @@ export default class MoviesPage extends Component {
 
 componentDidMount(){
  this.fetchHotData();
+ this.fetchIncomingSoonData();
+ this.fetchTop250Data();
 }
 constructor(props) {
   super(props)
   this.state = {
      isLoad:false,
      hotData:[],
+     incomingData:[],
+     top250Data:[],
   }
   this.fetchHotData = this.fetchHotData.bind(this);
+  this.fetchIncomingSoonData = this.fetchIncomingSoonData.bind(this);
+  this.fetchTop250Data = this.fetchTop250Data.bind(this);
 }
-
+/**
+ * 请求热门电影数据
+ */
 fetchHotData(){
   fetch(HOT_URL)
   .then(data => data.json())
@@ -48,25 +57,65 @@ fetchHotData(){
     })
   })
 }
+/**
+ * 请求即将上映电影
+ */
+fetchIncomingSoonData(){
+  fetch(INCOMING_SOON_URL)
+  .then(data => data.json())
+  .then(respData =>{
+    console.log(respData)
+    this.setState({
+      isLoad:true,
+      incomingData:this.state.incomingData.concat(respData.subjects),
+    })
+  })
+}
+/**
+ * 请求top250电影
+ */
+fetchTop250Data(){
+  fetch(TOP250_URL)
+  .then(data => data.json())
+  .then(respData =>{
+    console.log(respData)
+    this.setState({
+      isLoad:true,
+      top250Data:this.state.top250Data.concat(respData.subjects),
+    })
+  })
+}
+
   render() {
     
     return (
       <ScrollView style = {{backgroundColor: '#FDFDFD',}}>
-        <View style={styles.searchBG}>
+      {/* 搜索栏 */}
+      <TouchableWithoutFeedback onPress={()=>{this.searchPress()}}>
+        <View style={styles.searchBG} >
           <Image style={{ width: 10, height: 10 }} source={require('../../img/search.png')}>
           </Image>
           <Text style={styles.searchText} >搜索</Text>
         </View>
-        
+        </TouchableWithoutFeedback>
+
+
         <DefaultItem data = {this.state.hotData} title = '热映' type = '1'></DefaultItem>
-        <DefaultItem data = {this.state.hotData} title = '热映' type = '1'></DefaultItem>
-        <DefaultItem data = {this.state.hotData} title = '热映' type = '1'></DefaultItem>
+        <DefaultItem data = {this.state.incomingData} title = '即将上映' type = '2'></DefaultItem>
+        <DefaultItem data = {this.state.top250Data} title = 'TOP250' type = '3'></DefaultItem>
       </ScrollView>
     )
   }
+
+  searchPress(){
+      this.props.navigation.navigate('SearchPage',{})
+  }
 }
 
-
+  
+/**
+ * 每一个类别的布局
+ */
 class DefaultItem extends Component {
   constructor(props) {
     super(props);
@@ -95,7 +144,10 @@ class DefaultItem extends Component {
         </View>
     );
   }
-
+  /**
+   * FlatList Item 布局
+   * @param {*} param0 
+   */
   renderItemView ({item ,id}){
     return (<View style = {styles.itemStyle}>
       <Image style = {{width:scaleSizeW(290),height:scaleSizeH(400)}} source = {{uri :item.images.large}}/>

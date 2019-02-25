@@ -11,6 +11,7 @@ const URL = "https://www.apiopen.top/journalismApi";
 export default class NewsPage extends Component {
     static navigationOptions = {
         tabBarLabel: '新闻',
+        header: null,
         tabBarIcon: ({ focused, tintColor }) => {
             if (focused) {
                 return (

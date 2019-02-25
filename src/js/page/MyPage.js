@@ -7,6 +7,7 @@ export default class MyPage extends Component {
 
     static navigationOptions = {
         tabBarLabel: '我的',
+        header: null,
         tabBarIcon: ({focused ,tintColor}) => {
             if (focused) {
                 return (

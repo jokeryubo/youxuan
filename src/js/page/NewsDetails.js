@@ -3,7 +3,7 @@ import { View, Text ,WebView } from 'react-native';
 
 export default class NewsDetails extends Component {
   static navigationOptions ={
-    header:null
+    header:null,
   }
   constructor(props) {
     super(props);

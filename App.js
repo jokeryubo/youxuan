@@ -1,35 +1,122 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text ,StyleSheet ,Image} from 'react-native';
 import { createAppContainer, createBottomTabNavigator, createStackNavigator ,createMaterialTopTabNavigator} from 'react-navigation'
 import MoviesPage from './src/js/page/MoviesPage'
 import NewsPage from './src/js/page/NewsPage'
 import RecommendPage from './src/js/page/RecommendPage'
 import MyPage from './src/js/page/MyPage'
-import { scaleSizeH, setSpText } from './src/util/ScreenUtils';
+import { scaleSizeH, setSpText ,scaleSizeW} from './src/util/ScreenUtils';
 import NewsDetails from './src/js/page/NewsDetails';
-import HotShowing from './src/js/page/HotShowing';
-import Incoming from './src/js/page/Incoming';
-import Top250 from './src/js/page/Top250';
+import SearchPage from './src/js/page/SearchPage';
+
+const moviesNavigator  = createStackNavigator({
+  movies: MoviesPage,
+  SearchPage:SearchPage,
+},{
+  initialRouteName:'movies',
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: '#43BB5A',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  },
+}
+);
+const newsNavigator  = createStackNavigator({
+  news: NewsPage,
+  Details: NewsDetails,
+});
+const recommendNavigator  = createStackNavigator({
+  recommend: RecommendPage,
+});
+const myNavigator  = createStackNavigator({
+  my: MyPage
+});
+
+myNavigator.navigationOptions = {
+  tabBarLabel: '我的',
+        tabBarIcon: ({focused ,tintColor}) => {
+            if (focused) {
+                return (
+                    <Image style={styles.tabBarIcon} source={require('./src/img/my_focus.png')}/>
+                );
+            }
+            return (
+                <Image style={styles.tabBarIcon} source={require('./src/img/my.png')}/>
+            );
+        },
+};
+recommendNavigator.navigationOptions = {
+  tabBarLabel: '推荐',
+  tabBarIcon: ({focused ,tintColor}) => {
+      if (focused) {
+          return (
+              <Image style={styles.tabBarIcon} source={require('./src/img/recommend_focus.png')}/>
+          );
+      }
+      return (
+          <Image style={styles.tabBarIcon} source={require('./src/img/recommend.png')}/>
+      );
+  },
+};
+newsNavigator.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+    tabBarLabel: '新闻',
+    tabBarIcon: ({ focused, tintColor }) => {
+        if (focused) {
+            return (
+                <Image style={styles.tabBarIcon} source={require('./src/img/news_focus.png')} />
+            );
+        }
+        return (
+            <Image style={styles.tabBarIcon} source={require('./src/img/news.png')} />
+        );
+    },
+  };
+};
+moviesNavigator.navigationOptions =
+({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+    tabBarLabel: '电影',
+    tabBarIcon: ({ focused, tintColor }) => {
+      if (focused) {
+        return (
+          <Image style={styles.tabBarIcon} source={require('./src/img/movies_focus.png')} />
+        );
+      }
+      return (
+        <Image style={styles.tabBarIcon} source={require('./src/img/movies.png')} />
+      );
+    },
+    
+  };
+}; 
 
 const TabNavigator = createBottomTabNavigator({
   
-  movies: MoviesPage,
-  news: NewsPage,
-  recommend: RecommendPage,
-  my: MyPage
+  moviesNavigator: moviesNavigator,
+  newsNavigator: newsNavigator,
+  recommendNavigator: recommendNavigator,
+  myNavigator: myNavigator
 },
   {
-    // tabBarOptions: {
-    //   activeTintColor: '#d4237a',
-    //   inactiveTintColor: '#8a8a8a',
-    //   style: {
-    //     backgroundColor: '#000000',
-    //     paddingBottom: 1,
-    //     borderTopWidth: 0.2,
-    //     paddingTop: 1,
-    //     borderTopColor: '#532432',
-    //   },
-    // }
     tabBarOptions: {
       //当前选中的tab bar的文本颜色和图标颜色
       activeTintColor: '#d4237a',
@@ -77,23 +164,14 @@ const TabNavigator = createBottomTabNavigator({
   }
 )
 TabNavigator.navigationOptions = {
-  // Hide the header from AppNavigator stack
-  header: null,
+ header:null
 };
 
-const RootStack = createStackNavigator(
-  {
-    TabNavigator:TabNavigator,
-    Details: NewsDetails,
+const styles = StyleSheet.create({
+  tabBarIcon: {
+    width: scaleSizeW(48),
+    height: scaleSizeH(48),
+    marginTop: 3,
   },
-  {
-  }
-);
-
-const TopNavigator = createMaterialTopTabNavigator({
-  hot : HotShowing,
-  coming: Incoming,
-  top:Top250,
 });
-
-export default createAppContainer(RootStack);
+export default createAppContainer(TabNavigator);

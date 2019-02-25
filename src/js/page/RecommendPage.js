@@ -5,6 +5,7 @@ import { scaleSizeW, scaleSizeH } from '../../util/ScreenUtils';
 export default class RecommendPage extends Component {
   static navigationOptions = {
     tabBarLabel: '推荐',
+    header: null,
     tabBarIcon: ({focused ,tintColor}) => {
         if (focused) {
             return (

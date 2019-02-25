@@ -76,6 +76,19 @@ https://api.douban.com/v2/movie/search?q=战狼&start=25&count=25
 https://api.douban.com/v2/movie/search?tag=喜剧&start=25&count=25
 
  
+3、获取即将上映电影：
+
+接口：https://api.douban.com/v2/movie/coming_soon
+
+访问参数：
+
+start : 数据的开始项
+
+count：单页条数
+
+ 
+
+如：获取即将上映电影 第一页 10条数据：
 
  
 
