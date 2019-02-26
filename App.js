@@ -8,6 +8,7 @@ import MyPage from './src/js/page/MyPage'
 import { scaleSizeH, setSpText ,scaleSizeW} from './src/util/ScreenUtils';
 import NewsDetails from './src/js/page/NewsDetails';
 import SearchPage from './src/js/page/SearchPage';
+import MovieDetails from './src/js/page/MovieDetailspage';
 
 const moviesNavigator  = createStackNavigator({
   movies: MoviesPage,
@@ -20,7 +21,6 @@ const moviesNavigator  = createStackNavigator({
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
-      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -38,32 +38,6 @@ const myNavigator  = createStackNavigator({
   my: MyPage
 });
 
-myNavigator.navigationOptions = {
-  tabBarLabel: '我的',
-        tabBarIcon: ({focused ,tintColor}) => {
-            if (focused) {
-                return (
-                    <Image style={styles.tabBarIcon} source={require('./src/img/my_focus.png')}/>
-                );
-            }
-            return (
-                <Image style={styles.tabBarIcon} source={require('./src/img/my.png')}/>
-            );
-        },
-};
-recommendNavigator.navigationOptions = {
-  tabBarLabel: '推荐',
-  tabBarIcon: ({focused ,tintColor}) => {
-      if (focused) {
-          return (
-              <Image style={styles.tabBarIcon} source={require('./src/img/recommend_focus.png')}/>
-          );
-      }
-      return (
-          <Image style={styles.tabBarIcon} source={require('./src/img/recommend.png')}/>
-      );
-  },
-};
 newsNavigator.navigationOptions = ({ navigation }) => {
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
@@ -109,6 +83,32 @@ moviesNavigator.navigationOptions =
   };
 }; 
 
+myNavigator.navigationOptions = {
+  tabBarLabel: '我的',
+        tabBarIcon: ({focused ,tintColor}) => {
+            if (focused) {
+                return (
+                    <Image style={styles.tabBarIcon} source={require('./src/img/my_focus.png')}/>
+                );
+            }
+            return (
+                <Image style={styles.tabBarIcon} source={require('./src/img/my.png')}/>
+            );
+        },
+};
+recommendNavigator.navigationOptions = {
+  tabBarLabel: '推荐',
+  tabBarIcon: ({focused ,tintColor}) => {
+      if (focused) {
+          return (
+              <Image style={styles.tabBarIcon} source={require('./src/img/recommend_focus.png')}/>
+          );
+      }
+      return (
+          <Image style={styles.tabBarIcon} source={require('./src/img/recommend.png')}/>
+      );
+  },
+};
 const TabNavigator = createBottomTabNavigator({
   
   moviesNavigator: moviesNavigator,
@@ -166,6 +166,11 @@ const TabNavigator = createBottomTabNavigator({
 TabNavigator.navigationOptions = {
  header:null
 };
+
+const AppNavigator = createStackNavigator({
+  tab: TabNavigator,
+  
+});
 
 const styles = StyleSheet.create({
   tabBarIcon: {

@@ -1,73 +1,41 @@
+import React from 'react';
 import { View, Text } from 'react-native';
 import {
   createStackNavigator,
   createBottomTabNavigator,
   createAppContainer,
-  createSwitchNavigator,
 } from 'react-navigation';
 
-import React, { Component } from 'react';
+const Placeholder = ({ text }) => (
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <Text>{text}</Text>
+  </View>
+);
 
- class FeedScreen extends Component {
-
+class A extends React.Component {
   render() {
-    return (
-      <View>
-        <Text> textInComponent FeedScreen</Text>
-      </View>
-    );
+    return <Placeholder text="A!" />;
   }
 }
-class ProfileScreen extends Component {
-  
-    render() {
-      return (
-        <View>
-          <Text> textInComponent ProfileScreen</Text>
-        </View>
-      );
-    }
-  }
-  class DetailsScreen extends Component {
-  
-    render() {
-      return (
-        <View>
-          <Text> textInComponent DetailsScreen</Text>
-        </View>
-      );
-    }
-  }
-  class AuthScreen extends Component {
-  
-    render() {
-      return (
-        <View>
-          <Text> textInComponent AuthScreen</Text>
-        </View>
-      );
-    }
-  }
 
-const FeedStack = createStackNavigator({
-    FeedHome: FeedScreen,
-    /* any other route you want to render under the tab bar */
-  });
-  
-  const TabNavigator = createBottomTabNavigator({
-    Feed: FeedStack,
-    Profile: ProfileScreen,
-  });
-  
-  const HomeStack = createStackNavigator({
-    Tabs: TabNavigator,
-    Details: DetailsScreen,
-    /* any other route you want to render above the tab bar */
-  });
-  
-  const AppNavigator = createStackNavigator({
-    Auth: AuthScreen,
-    Home: HomeStack,
-  });
+class B extends React.Component {
+  render() {
+    return <Placeholder text="B!" />;
+  }
+}
 
-  export default createAppContainer(AppNavigator);
+let HomeStack = createStackNavigator({ A });
+let SettingsStack = createStackNavigator({ B });
+
+HomeStack.navigationOptions = {
+  tabBarLabel: 'Home!',
+};
+
+SettingsStack.navigationOptions = {
+  tabBarLabel: 'Settings!',
+};
+
+export default createAppContainer(createBottomTabNavigator({
+  HomeStack,
+  SettingsStack,
+}));

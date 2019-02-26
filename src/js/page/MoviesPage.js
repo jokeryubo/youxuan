@@ -149,11 +149,19 @@ class DefaultItem extends Component {
    * @param {*} param0 
    */
   renderItemView ({item ,id}){
-    return (<View style = {styles.itemStyle}>
+    return (<TouchableWithoutFeedback onPress = {()=> this.itemClick(item.title,id)}>
+    <View style = {styles.itemStyle}>
       <Image style = {{width:scaleSizeW(290),height:scaleSizeH(400)}} source = {{uri :item.images.large}}/>
       <Text style= {{marginTop:scaleSizeH(10),marginBottom:scaleSizeH(10)}} numberOfLines={1}>{item.title} </Text>
       <Text>{item.rating.average}</Text>
-    </View>);
+    </View>
+    </TouchableWithoutFeedback>);
+  }
+  itemClick({title ,id}){
+    this.props.navigation.navigate('MovieDetails',{
+      title:title,
+      id:id,
+    })
   }
 }
 
