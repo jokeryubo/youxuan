@@ -5,11 +5,16 @@ import { Text, View, Image, StyleSheet, ScrollView, Button ,
 import { scaleSizeW, scaleSizeH } from '../../util/ScreenUtils';
 import { createAppContainer, createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 import { FlatList } from 'react-native-gesture-handler';
+import {withNavigation } from 'react-navigation'
+
 
 const HOT_URL = "https://api.douban.com/v2/movie/in_theaters?city=北京&start=0&count=5";
 
 const INCOMING_SOON_URL = "https://api.douban.com/v2/movie/coming_soon?start=0&count=5";
 const TOP250_URL = "http://api.douban.com/v2/movie/top250?start=0&count=5";
+
+
+
 export default class MoviesPage extends Component {
   static navigationOptions = {
     tabBarLabel: '电影',
@@ -34,10 +39,13 @@ componentDidMount(){
 constructor(props) {
   super(props)
   this.state = {
-     isLoad:false,
+     isHotLoad:false,
+     isIncomingLoad:false,
+     isTop250Load:false,
      hotData:[],
      incomingData:[],
      top250Data:[],
+
   }
   this.fetchHotData = this.fetchHotData.bind(this);
   this.fetchIncomingSoonData = this.fetchIncomingSoonData.bind(this);
@@ -52,7 +60,7 @@ fetchHotData(){
   .then(respData =>{
     console.log(respData)
     this.setState({
-      isLoad:true,
+      isHotLoad:true,
       hotData:this.state.hotData.concat(respData.subjects),
     })
   })
@@ -66,7 +74,7 @@ fetchIncomingSoonData(){
   .then(respData =>{
     console.log(respData)
     this.setState({
-      isLoad:true,
+      isIncomingLoad:true,
       incomingData:this.state.incomingData.concat(respData.subjects),
     })
   })
@@ -80,14 +88,16 @@ fetchTop250Data(){
   .then(respData =>{
     console.log(respData)
     this.setState({
-      isLoad:true,
+      isTop250Load:true,
       top250Data:this.state.top250Data.concat(respData.subjects),
     })
   })
 }
 
   render() {
-    
+    // if(!this.setState.isHotLoad ){
+    //   return (<Text></Text>);
+    // }
     return (
       <ScrollView style = {{backgroundColor: '#FDFDFD',}}>
       {/* 搜索栏 */}
@@ -100,14 +110,15 @@ fetchTop250Data(){
         </TouchableWithoutFeedback>
 
 
-        <DefaultItem data = {this.state.hotData} title = '热映' type = '1'></DefaultItem>
-        <DefaultItem data = {this.state.incomingData} title = '即将上映' type = '2'></DefaultItem>
-        <DefaultItem data = {this.state.top250Data} title = 'TOP250' type = '3'></DefaultItem>
+        <DefaultItem data = {this.state.hotData} title = '热映' type = '1' navigation={this.props.navigation} ></DefaultItem>
+        <DefaultItem data = {this.state.incomingData} title = '即将上映' type = '2' navigation={this.props.navigation}></DefaultItem>
+        <DefaultItem data = {this.state.top250Data} title = 'TOP250' type = '3' navigation={this.props.navigation} ></DefaultItem>
       </ScrollView>
     )
   }
 
   searchPress(){
+    console.log("this.props:",this.props ,"   +++")
       this.props.navigation.navigate('SearchPage',{})
   }
 }
@@ -123,11 +134,14 @@ class DefaultItem extends Component {
       data:[],
       title:'',
       type:'',
+      isLoad:false,
     };
+    this.itemClick = this.itemClick.bind(this);
+    this.renderItemView =this.renderItemView.bind(this)
   }
 
   render() {
-    console.log("data:",this.props.data[0])
+    
     return (
       <View style = {{margin:scaleSizeW(20),}}>
           <View style = {styles.textRow}>
@@ -148,8 +162,8 @@ class DefaultItem extends Component {
    * FlatList Item 布局
    * @param {*} param0 
    */
-  renderItemView ({item ,id}){
-    return (<TouchableWithoutFeedback onPress = {()=> this.itemClick(item.title,id)}>
+  renderItemView ({item }){
+    return (<TouchableWithoutFeedback onPress = {()=> this.itemClick(item.title,item.id)}>
     <View style = {styles.itemStyle}>
       <Image style = {{width:scaleSizeW(290),height:scaleSizeH(400)}} source = {{uri :item.images.large}}/>
       <Text style= {{marginTop:scaleSizeH(10),marginBottom:scaleSizeH(10)}} numberOfLines={1}>{item.title} </Text>
@@ -157,14 +171,15 @@ class DefaultItem extends Component {
     </View>
     </TouchableWithoutFeedback>);
   }
-  itemClick({title ,id}){
+  itemClick(title ,id){
+    console.log(title,id)
     this.props.navigation.navigate('MovieDetails',{
       title:title,
       id:id,
     })
   }
 }
-
+// export default withNavigation(DefaultItem);
 
 const styles = StyleSheet.create({
   tabBarIcon: {

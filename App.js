@@ -13,6 +13,7 @@ import MovieDetails from './src/js/page/MovieDetailspage';
 const moviesNavigator  = createStackNavigator({
   movies: MoviesPage,
   SearchPage:SearchPage,
+  MovieDetails:MovieDetails,
 },{
   initialRouteName:'movies',
   defaultNavigationOptions: {

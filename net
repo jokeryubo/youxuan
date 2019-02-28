@@ -104,6 +104,6 @@ count：单页条数
 电影id
 
 如：电影《神秘巨星》的电影id为：26942674，搜索此电影的详细信息
-http://api.douban.com/v2/movie/subject/26942674
+http://api.douban.com/v2/movie/subject/1652592
 
 https://blog.csdn.net/IT_czh/article/details/85617835
